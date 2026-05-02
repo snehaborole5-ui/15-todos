@@ -31,14 +31,32 @@ const uuid = () => {
     }
   )
 }
+
+function onRemove(ele){
+  let REMOVE_ID = ele.closest('li').id;
+
+  let getIndex = todoArr.findIndex(todo =>{
+    return todo.todoId === REMOVE_ID
+  })
+  cl(getIndex)
+
+  let removeTodo = todoArr.splice(getIndex,1);
+  ele.closest('li').remove();
+  Swal.fire({
+    title: `The Todo item ${removeTodo[0].todoItem} removed successfully !!!`,
+    timer: 3000,
+    icon:'success'
+})
+}
+
 function temmplating (arr){
     let result = '';
     arr.forEach(obj => {
-        result += `<li class="list-group-item d-flex justify-content-between" id="todoItem">
+        result += `<li class="list-group-item d-flex justify-content-between" id="${obj.todoId}">
                            <strong>${obj.todoItem}</strong> 
                          <div>
-                             <i class="fa-solid fa-pen-to-square fa-2x  text-primary"></i>
-                             <i class="fa-solid fa-trash fa-2x text-danger "></i>   
+                             <i class="fa-solid fa-pen-to-square fa-2x  text-primary role="button" "></i>
+                             <i class="fa-solid fa-trash fa-2x text-danger role="button" onclick="onRemove(this)"></i>   
                          </div>
                         </li> 
         `
@@ -61,12 +79,16 @@ function onTodoSubmit(eve){
 
     li.innerHTML = `<strong>${newTodo.todoItem}</strong>
                     <div>
-                        <i class="fa-solid fa-pen-to-square fa-2x  text-primary"></i>
-                        <i class="fa-solid fa-trash fa-2x text-danger "></i>   
+                        <i class="fa-solid fa-pen-to-square fa-2x  text-primary "></i>
+                        <i class="fa-solid fa-trash fa-2x text-danger onclick="onRemove(this)"></i>   
                     </div>`
 
     todoList.append(li)
     todoForm.reset();
+    Swal.fire({
+        title: `The new Todo ${newTodo.todoItem} item added successfully !!!`,
+        timer: 3000,
+    })
 }
 
 todoForm.addEventListener('submit', onTodoSubmit)
